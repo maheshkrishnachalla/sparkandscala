@@ -23,7 +23,7 @@ object MultiLineJsonParser extends App{
   .config(sparkConf)
   .getOrCreate()
   
-  val loadDf = spark.read
+  val readDf = spark.read
   .option("multiline", true)
   .option("mode", "permissive")
   .json("C:\\Users\\Admin\\Desktop\\MultilineJsonParser.json")
@@ -31,11 +31,28 @@ object MultiLineJsonParser extends App{
     import spark.implicits._
   // explode Array DF
   
-    loadDf.createOrReplaceTempView("customers")
+    //loadDf.createOrReplaceTempView("customers")
+    readDf.write.parquet("C:\\Users\\Admin\\Desktop\\multiline.parquet")
     
+   val  parquetDf = spark.read.parquet("C:\\Users\\Admin\\Desktop\\multiline.parquet")
     
-    
-    val resultDf = loadDf.select("address.*", "invoiceItem.*").drop("address","invoiceItem")
+   
+   parquetDf.printSchema()
+   
+   parquetDf.createOrReplaceTempView("parquetFile")
+   
+   val resultDf = spark.sql("select * from parquetFile")
+   
+   val x = resultDf.columns.size;
+   
+   println("colums" + x)
+   
+   
+   
+   
+   
+   
+ //   val resultDf = loadDf.select("address.*", "invoiceItem.*").drop("address","invoiceItem")
   
    
    //loadDf.show(false)

@@ -42,7 +42,9 @@ object DataframeJoinSameColumn extends App{
 	.select("order_id","customer_id","customer_fname")
 	.sort("order_id")
 	.withColumn("order_id", expr("coalesce(order_id,-1)"))*/
-	joinDf.show()
+	
+	joinDf.explain(true)
+	
 
 	scala.io.StdIn.readLine()
 	spark.stop()

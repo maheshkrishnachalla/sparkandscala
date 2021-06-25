@@ -1,4 +1,5 @@
 import org.apache.spark.SparkContext
+
 import org.apache.log4j.Level
 import org.apache.log4j.Logger
 import scala.io.Source

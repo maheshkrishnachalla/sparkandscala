@@ -5,14 +5,16 @@ import org.apache.log4j.Level
 import org.apache.log4j.Logger
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.expressions.Window
-import org.apache.hadoop.hdfs.server.namenode.INodeReference.WithCount
+import org.apache.spark.sql.expressions._
+import org.apache.spark.sql.expressions.Window._
+
 
 object DataframeWindowaggregates extends App{
   
   Logger.getLogger("org").setLevel(Level.ERROR)
 
 	val sparkconf = new SparkConf()
-	sparkconf.set("spark.app,name", "Window Aggregates")
+	sparkconf.set("spark.app.name", "Window Aggregates")
 	sparkconf.set("spark.master","local[2]")
 
 	val spark = SparkSession.builder()
@@ -30,7 +32,8 @@ object DataframeWindowaggregates extends App{
 	
 	val window = Window.partitionBy("country")
 	.orderBy("weeknum")
-	.rowsBetween(Window.unboundedPreceding , Window.currentRow)
+	rowsBetween(Window.unboundedPreceding , Window.currentRow)
+	
 	
 	val df = invoiceDf.withColumn("Runningtotal",
 	    sum("invoicevalue").over(window))
